@@ -1,0 +1,2 @@
+Backend : Springboot 💚
+Frontend : React 💙

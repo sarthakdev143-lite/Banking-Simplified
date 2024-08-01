@@ -32,7 +32,7 @@ const Navbar = () => {
                     </li>
                     <li className='faic'>
                         <NavLink id='link' to="/account" className='faic s-gap hover-target' activeClassName="active">
-                            <span>Accounts</span>
+                            <span>My Account</span>
                             <i className="ri-user-3-line"></i>
                         </NavLink>
                     </li>

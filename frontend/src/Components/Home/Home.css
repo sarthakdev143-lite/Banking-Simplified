@@ -163,7 +163,8 @@ div {
             }
         }
 
-        #money-deposited {
+        #money-deposited,
+        #money-withdrawn {
             position: absolute;
             z-index: 101;
             right: 5%;

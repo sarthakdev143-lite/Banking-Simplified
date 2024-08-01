@@ -1,0 +1,14 @@
+.follower {
+  position: fixed;
+  width: 2rem;
+  height: 2rem;
+  border: 0.5rem double #eee;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 4rem 1rem #eee;
+  will-change: transform;
+  transform-origin: center;
+  transform: translate(-50%, -50%);
+  transition: background-color 0.2s ease;
+  z-index: 1000;
+}

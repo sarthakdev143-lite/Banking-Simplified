@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+div {
+    width: 100%;
+    height: 100%;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        z-index: -1;
+    }
+
+    section.content {
+        width: 100%;
+        height: 100%;
+        padding-top: 8rem;
+        padding-left: 5rem;
+        display: flex;
+        overflow: hidden;
+        position: relative;
+        /* background: green; */
+
+        h1 {
+            color: #eee;
+            font-size: 6rem;
+            width: 55rem;
+            height: fit-content;
+            text-align: center;
+            margin-left: -1rem;
+
+            span {
+                margin-right: 2rem;
+                display: inline-block;
+            }
+        }
+
+        a {
+            color: #eee;
+            font-size: 1.5rem;
+            position: absolute;
+            padding: 1rem 2rem;
+            border-radius: 5rem;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(0.1rem);
+            transition: all ease 0.3s;
+            bottom: 3.5rem;
+
+            &#login {
+                left: 4rem;
+            }
+
+            &#account-created,
+            &#otp-sent {
+                right: 5rem;
+                bottom: -5rem;
+                opacity: 0;
+
+                &.animate {
+                    animation: created 6s forwards ease;
+                }
+
+                span {
+                    width: 2rem;
+                    height: 2rem;
+                    border-radius: 50%;
+                    background: rgb(5, 207, 5);
+                    display: block;
+                }
+            }
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.35);
+            }
+        }
+
+        #wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        #form,
+        #otp-form {
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(0.25rem);
+            width: fit-content;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            padding: 2.5rem 3rem;
+            gap: 2.5rem;
+            font-size: 1.5rem;
+            color: #eee;
+            margin-top: 2rem;
+            transition: all ease 0.3s;
+            margin-left: -5rem;
+            right: 10rem;
+
+            .input-div {
+                width: 100%;
+                height: fit-content;
+                display: flex;
+                gap: 3rem;
+                justify-content: space-between;
+                input-security: auto;
+
+                input {
+                    background: none;
+                    border: none;
+                    outline: none;
+                    border-bottom: 0.1rem solid #eee;
+                    padding-left: 1rem;
+                }
+
+                input[type="number"]::-webkit-outer-spin-button,
+                input[type="number"]::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+
+                input[type="number"] {
+                    -moz-appearance: textfield;
+                    appearance: textfield;
+                }
+
+                button {
+                    right: 0;
+                }
+            }
+
+            button[type="submit"] {
+                background: rgba(0, 0, 0, 0.25);
+                padding: 1rem 2rem;
+                border: 0.1rem solid #eee;
+                transition: all ease 0.3s;
+
+                &:hover {
+                    color: #111;
+                    background: rgba(255, 255, 255, 0.25);
+                    border-color: #111;
+                }
+
+                &:active {
+                    padding: 1rem 3rem;
+                    transform: scale(0.95);
+                    transition-duration: 0.1s;
+                }
+            }
+        }
+
+        #money-deposited {
+            position: absolute;
+            z-index: 101;
+            right: 5%;
+            width: fit-content;
+            height: fit-content;
+            background: #00000021;
+            top: 15%;
+            border-radius: 0.5rem;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.2rem;
+            color: #fff;
+            transition: all ease 0.3s;
+            transform: translateX(200%);
+            opacity: 0;
+
+            &.active {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            span {
+                width: 2rem;
+                height: 2rem;
+                border-radius: 50%;
+                background: rgb(5, 207, 5);
+                display: block;
+            }
+        }
+
+        .error-message {
+            position: absolute;
+            bottom: 12rem;
+            right: 17.35%;
+            width: fit-content;
+            height: fit-content;
+            background: rgba(255, 0, 0, 0.6);
+            color: #fff;
+            backdrop-filter: blur(0.2rem);
+            padding: 1rem 2rem;
+            border-radius: 5rem;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+
+            &.show {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+@keyframes created {
+
+    20%,
+    70% {
+        bottom: 3.5rem;
+    }
+
+    50% {
+        opacity: 1;
+        bottom: 3.5rem;
+    }
+
+    90% {
+        bottom: -5rem;
+    }
+}

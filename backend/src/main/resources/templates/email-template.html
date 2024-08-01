@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Your OTP Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+        }
+
+        .otp {
+            font-size: 1.5rem;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        .disclaimer {
+            font-style: italic;
+            color: #ff0000;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>OTP Code</h1>
+    <p>Hello,</p>
+    <p>Your OTP code is: <strong class="otp" id="otp" th:text="${otp}"></strong></p>
+    <p class="disclaimer">For security reasons, <strong>do not</strong> share this OTP with anyone else.</p>
+    <p>Thank you!</p>
+    <br>
+    <p>Powered by <a href="https://github.com/sarthakdev143-lite" target="_blank">Sarthakdev143</a></p>
+</body>
+
+</html>

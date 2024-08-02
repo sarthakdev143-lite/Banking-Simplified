@@ -17,6 +17,7 @@ import github.sarthakdev143.backend.Repository.UsersRepository;
 import github.sarthakdev143.backend.Service.EmailService;
 import github.sarthakdev143.backend.Service.OtpService;
 
+@SuppressWarnings("unused")
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class OtpController {
@@ -30,7 +31,7 @@ public class OtpController {
     @Autowired
     private UsersRepository usersRepository;
 
-    @PostMapping("/send-otp")
+    @PostMapping("/send-transaction-otp")
     public ResponseEntity<String> sendOtp(@RequestBody Map<String, String> request) {
         try {
             String email = request.get("email");
@@ -53,7 +54,7 @@ public class OtpController {
         }
     }
 
-    @PostMapping("/verify-otp")
+    @PostMapping("/verify-trasaction-otp")
     public ResponseEntity<Map<String, Object>> verifyOtp(@RequestBody OtpVerificationDTO otpRequest) {
         System.out.println("\n\nEntered OTP Verification Method..\n");
         String email = otpRequest.getEmail();

@@ -32,10 +32,10 @@ public class OtpService {
     }
 
     public boolean validateOtp(String email, String enteredOtp) {
-        System.out.println("Entered OTP Validation Method..");
+        System.out.println("\n\nEntered OTP Validation Method..");
         // Check if the OTP is valid
         OtpDetails otpDetails = otpStore.get(email);
-        System.out.println("Actual OTP : " + otpDetails.getOtp() + "\nEntered OTP : " + enteredOtp);
+        System.out.println("\nActual OTP : " + otpDetails.getOtp() + "\nEntered OTP : " + enteredOtp + "\n\n");
         if (otpDetails != null && otpDetails.getOtp().equals(enteredOtp)) {
             if (System.currentTimeMillis() <= otpDetails.getExpirationTime()) {
                 otpStore.remove(email); // OTP is valid, remove it from the store

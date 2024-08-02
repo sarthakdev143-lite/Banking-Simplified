@@ -41,4 +41,54 @@ public class EmailService {
             System.out.println("Printing Exception : " + e);
         }
     }
+
+    public void sendTransactionEmail(String to, String transactionId, double amount, String date, String type)
+            throws MessagingException {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(to);
+            helper.setSubject("Transaction Details");
+
+            // Create Thymeleaf context and process the transaction email template
+            Context context = new Context();
+            context.setVariable("transactionId", transactionId);
+            context.setVariable("amount", amount);
+            context.setVariable("date", date);
+            context.setVariable("type", type);
+            String body = templateEngine.process("transaction-email-template", context);
+
+            // Set email body as HTML
+            helper.setText(body, true);
+
+            // Send the email
+            mailSender.send(message);
+        } catch (Exception e) {
+            System.out.println("Printing Exception : " + e);
+        }
+    }
+
+    public void sendWelcomeEmail(String to, String name) throws MessagingException {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(to);
+            helper.setSubject("Welcome to Our Service");
+
+            // Create Thymeleaf context and process the welcome email template
+            Context context = new Context();
+            context.setVariable("name", name);
+            String body = templateEngine.process("welcome-email-template", context);
+
+            // Set email body as HTML
+            helper.setText(body, true);
+
+            // Send the email
+            mailSender.send(message);
+        } catch (Exception e) {
+            System.out.println("Printing Exception : " + e);
+        }
+    }
 }

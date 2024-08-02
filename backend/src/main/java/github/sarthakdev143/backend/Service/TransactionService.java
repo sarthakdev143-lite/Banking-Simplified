@@ -1,5 +1,7 @@
 package github.sarthakdev143.backend.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,11 +9,16 @@ import org.springframework.stereotype.Service;
 
 import github.sarthakdev143.backend.Model.Users;
 import github.sarthakdev143.backend.Repository.UsersRepository;
+import jakarta.mail.MessagingException;
 
 @Service
 public class TransactionService {
+
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     public boolean deposit(String email, String amount) {
         System.out.println("\nInitiating Deposit Of Amount : ₹" + amount + "...\n");
@@ -33,9 +40,12 @@ public class TransactionService {
                 user.get().setAccount_balance("₹" + newBalance);
                 usersRepository.save(user.get());
 
+                // Send transaction email
+                sendTransactionEmail(user.get(), "deposit", amountInt);
+
                 return true;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number format: " + e.getMessage());
+            } catch (NumberFormatException | MessagingException e) {
+                System.out.println("Error: " + e.getMessage());
                 return false;
             }
         }
@@ -69,13 +79,22 @@ public class TransactionService {
                 user.get().setAccount_balance("₹" + newBalance);
                 usersRepository.save(user.get());
 
+                // Send transaction email
+                sendTransactionEmail(user.get(), "withdraw", amountInt);
+
                 return true;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number format: " + e.getMessage());
+            } catch (NumberFormatException | MessagingException e) {
+                System.out.println("Error: " + e.getMessage());
                 return false;
             }
         }
         System.out.println("User With Email : (" + email + ") Not Found...");
         return false;
+    }
+
+    private void sendTransactionEmail(Users user, String type, int amount) throws MessagingException {
+        String transactionId = "TXN" + System.currentTimeMillis(); // Generate a transaction ID
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        emailService.sendTransactionEmail(user.getEmail(), transactionId, amount, date, type);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import github.sarthakdev143.backend.DTO.VerifyOtpRequestDTO;
 import github.sarthakdev143.backend.Exception.UserAlreadyExistsException;
 import github.sarthakdev143.backend.Model.Users;
 import github.sarthakdev143.backend.Repository.UsersRepository;
@@ -29,21 +30,51 @@ public class UsersController {
     private UsersRepository usersRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<Users> createUser(@RequestBody Users users) {
+    public ResponseEntity<String> sendOtp(@RequestBody Users user) {
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            System.out.println("Invalid Email..");
+            return new ResponseEntity<>("Invailid Email..", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Users> existingUser = usersRepository.findByEmail(user.getEmail());
+        if (existingUser.isPresent()) {
+            System.out.println("User with email (" + user.getEmail() + ") already exists.");
+            return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
+        }
+
         try {
-            users.setAccount_balance("₹0");
-            Users createdUser = usersService.createUser(users);
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-        } catch (UserAlreadyExistsException e) {
-            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+            usersService.sendOtp(user.getEmail());
+            return new ResponseEntity<>("OTP sent to " + user.getEmail(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to send OTP", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<String> verifyOtp(@RequestBody VerifyOtpRequestDTO requestDTO) {
+        System.out.println("\n\nVerifying OTP..");
+        Users user = requestDTO.getUser();
+        String otp = requestDTO.getOtp();
+        try {
+            boolean isValid = usersService.validateOtp(user.getEmail(), otp);
+            if (isValid) {
+                user.setAccount_balance("₹0");
+                usersRepository.save(user);
+                return new ResponseEntity<>("OTP verified", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Invalid OTP", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to verify OTP",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/check-user")
-    public ResponseEntity<String> sendOtp(@RequestParam String email) {
+    public ResponseEntity<String> sendOtpIfUserExists(@RequestParam String email) {
+        System.out.println("\n\nChecking User..");
         if (email == null || email.isEmpty()) {
-            // Bad request, email is missing or invalid
-            System.out.println("Email Not Registered..");
+            System.out.println("\n\nEmail Not Registered..\n\n");
             return new ResponseEntity<>("Email Not Found! 404", HttpStatus.BAD_REQUEST);
         }
 
@@ -52,28 +83,31 @@ public class UsersController {
             System.out.println("\n\nUser Found..!!\n\n");
             return new ResponseEntity<>("User Found", HttpStatus.OK);
         } else {
-            // Bad request, email is missing or invalid
-            System.out.println("User not Found");
+            System.out.println("\n\nUser not Found\n\n");
             return new ResponseEntity<>("User not found! 404", HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/check-password")
-    public Boolean checkPassword(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<Boolean> checkPassword(@RequestParam String email, @RequestParam String password) {
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-            // Bad request, email is missing or invalid
-            return false;
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
 
         Optional<Users> user = usersRepository.findByEmail(email);
-        String userPassword = user.get().getPassword();
-        System.out.println("\n\n\nCurrect User Password : " + userPassword + "\nEntered Password : " + password);
-        if (password.equals(userPassword)) {
-            System.out.println("Password Matched!\n\n\n");
-            return true;
-        } else
-            System.out.println("Password Not Matched!\n\n\n");
-        return false;
+        if (user.isPresent()) {
+            String userPassword = user.get().getPassword();
+            System.out.println("\n\nCurrent User Password : " + userPassword + "\nEntered Password : " + password + "\n\n");
+            if (password.equals(userPassword)) {
+                System.out.println("\nPassword Matched!\n\n");
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            } else {
+                System.out.println("\nPassword Not Matched!\n\n");
+                return new ResponseEntity<>(false, HttpStatus.OK);
+            }
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        }
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)

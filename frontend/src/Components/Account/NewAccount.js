@@ -1,55 +1,74 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye and eye-slash icons
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { MYAXIOS } from '../Helper';
 import '../Home/Home.css';
 
 const NewAccount = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    id: null,
-    account_holder_name: "",
-    email: "",
-    password: "",
+    account_holder_name: '',
+    email: '',
+    password: '',
   });
-  const [errorMessage, setErrorMessage] = useState("");
+  const [otp, setOtp] = useState('');
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOtpLoading, setIsOtpLoading] = useState(false);
 
   const handleInputChange = (e) => {
-    console.log("name :" + e.target.name);
-    console.log("value :" + e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleOtpRequest = async (e) => {
+    e.preventDefault();
+    try {
+      console.log("Verifying OTP..");
+      const response = await MYAXIOS.post('/verify-otp', {
+        user: formData,
+        otp: otp
+      });
+      if (response.status === 200) {
+        document.querySelector('#account-created').classList.add('animate');
+        setErrorMessage('');
+        setFormData({ account_holder_name: '', email: '', password: '' });
+        setOtp('');
+        document.querySelectorAll('input').forEach(input => {
+          input.value = '';
+        });
+        setShowOtpInput(false);
+      }
+    } catch (error) {
+      console.error('Error handling OTP request: ', error);
+      if (error.response && error.response.status === 409) {
+        setErrorMessage('User already exists.');
+      } else {
+        setErrorMessage('Error verifying OTP.');
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 7500);
+      }
+    }
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsOtpLoading(true);
     try {
-      if (formData.id && formData.email) {
-        // Update existing student
-        // Print Message, Data Already Exists
-      } else {
-        // Create new student
-        console.log(formData.account_holder_name);
-        console.log(formData.email);
-        await MYAXIOS.post("/create", formData);
-        // Reset the form and fetch updated data
-        setFormData({ id: null, account_holder_name: "", email: "", password: "" });
-        let inputTag = document.querySelectorAll("input");
-        inputTag.forEach((input) => {
-          input.value = "";
-        });
-        document.querySelector("#account-created").classList.add("animate");
-        setTimeout(() => {
-          document.querySelector("#account-created").classList.remove("animate");
-        }, 6500);
-        setErrorMessage(""); // Clear any previous error message
+      const response = await MYAXIOS.post('/create', { email: formData.email });
+      if (response.status === 200) {
+        setShowOtpInput(true);
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        setErrorMessage("Email is already registered.");
+        setErrorMessage('Email is already registered.');
       } else {
-        console.error("Error submitting form: ", error);
+        setErrorMessage('Error creating account.');
       }
+    } finally {
+      setIsOtpLoading(false);
     }
   };
 
@@ -94,36 +113,61 @@ const NewAccount = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'backOut', delay: 0.5 }}
-          onSubmit={handleSubmit}
+          onSubmit={showOtpInput ? handleOtpRequest : handleSubmit}
           className='absolute'
         >
-          {formFields.map(({ label, type, id, delay }) => (
+          {
+            showOtpInput ? null :
+              formFields.map(({ label, type, id, delay }) => (
+                <motion.div
+                  className='input-div relative'
+                  key={id}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, ease: 'backOut', delay }}
+                >
+                  <label htmlFor={id}>{label}</label>
+                  <input required type={type} id={id} name={id} onChange={handleInputChange} />
+                  {id === 'password' && (
+                    <button
+                      type='button'
+                      onClick={() => setShowPassword(!showPassword)}
+                      className='password-toggle absolute'
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  )}
+                </motion.div>
+              ))
+          }
+          {showOtpInput && (
             <motion.div
               className='input-div relative'
-              key={id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: 'backOut', delay }}
             >
-              <label htmlFor={id}>{label}</label>
-              <input required type={type} id={id} name={id} onChange={handleInputChange} />
-              {id === 'password' && (
-                <button
-                  type='button'
-                  onClick={() => setShowPassword(!showPassword)}
-                  className='password-toggle absolute'
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              )}
+              <div className="flex-column">
+                <label htmlFor='otp' id='otp-statement'>Please Enter The OTP You Have Received at <i className='highlight'>{formData.email}</i></label>
+                <div className="flex">
+                  <label htmlFor='otp'>OTP</label>
+                  <input
+                    required
+                    type='text'
+                    id='otp'
+                    name='otp'
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                  />
+                </div>
+              </div>
             </motion.div>
-          ))}
+          )}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: 'backOut', delay: 0.9 }}
           >
-            <button id='submit-button' type='submit'>Create Account</button>
+            <button id='submit-button' type='submit' disabled={isLoading || isOtpLoading}>
+              {showOtpInput ? 'Create Account' : 'Request OTP'}
+            </button>
           </motion.div>
         </motion.form>
         {errorMessage && (
@@ -143,8 +187,14 @@ const NewAccount = () => {
           transition={{ duration: 0.2, ease: 'backOut', delay: 1 }}
           id='login'
         >
-          Already Have an Account? <span style={{color: "aquamarine"}}>Login!</span>
+          Already Have an Account? <span style={{ color: 'aquamarine' }}>Login!</span>
         </motion.a>
+        {isOtpLoading && (
+          <div className='loading-overlay'>
+            <div className='loading-spinner'></div>
+            <p>Sending OTP...</p>
+          </div>
+        )}
         <motion.a
           href='/login'
           initial={{ opacity: 0, y: 25 }}
@@ -154,10 +204,10 @@ const NewAccount = () => {
           className='faic s-gap'
         >
           Account Created
-          <span className='relative'><i class="center2 ri-check-double-fill"></i></span>
+          <span className='relative'><i className='center2 ri-check-double-fill'></i></span>
         </motion.a>
       </section>
-    </div>
+    </div >
   );
 };
 

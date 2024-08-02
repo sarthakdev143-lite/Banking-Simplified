@@ -9,6 +9,8 @@ const Deposit = () => {
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOtpLoading, setIsOtpLoading] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -29,6 +31,8 @@ const Deposit = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
+    setIsOtpLoading(true);
+
     try {
       await MYAXIOS.get('/check-user', {
         params: { email: formData.email }
@@ -39,15 +43,18 @@ const Deposit = () => {
       });
 
       if (isCorrect.data === true) {
-        document.querySelector("#otp-sent").classList.add("animate");
-        await MYAXIOS.post('/send-otp', { email: formData.email });
+        await MYAXIOS.post('/send-transaction-otp', { email: formData.email });
         setShowOtpInput(true);
         console.log("OTP Sent");
       } else {
         alert("Incorrect Password! Try Again");
       }
     } catch (error) {
+      setIsOtpLoading(false);
       console.error('Error checking user or sending OTP:', error);
+      alert("Please Create an Account First.\n\nIf The Error Continues Please Get Help By Contacting Us.");
+    } finally {
+      setIsOtpLoading(false);
     }
   };
 
@@ -58,12 +65,14 @@ const Deposit = () => {
       return;
     }
 
+    setIsLoading(true);
+
     try {
       const email = formData.email;
+
       console.log("\nEmail : " + email + "\nOTP : " + otp);
       console.log("Verifying OTP...");
-
-      const response = await MYAXIOS.post('/verify-otp', {
+      const response = await MYAXIOS.post('/verify-trasaction-otp', {
         email: email,
         otp: otp
       });
@@ -78,11 +87,7 @@ const Deposit = () => {
         });
 
         if (depositResponse.data.success) {
-          document.querySelector("#money-deposited").classList.add("active");
-          setTimeout(() => {
-            document.querySelector("#money-deposited").classList.remove("active");
-          }, 3000);
-          await new Promise(resolve => setTimeout(resolve, 3000));
+          alert("₹" + formData.amount + " has Been Deposited To Your Bank Account")
           alert('Redirecting to Home Page...');
           window.location.href = '/';
         } else {
@@ -94,6 +99,8 @@ const Deposit = () => {
     } catch (error) {
       console.error('Something Went Wrong! Please Try Again Later\n\nWhat went Wrong:', error);
       alert('Something Went Wrong! Please Try Again Later');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -125,16 +132,6 @@ const Deposit = () => {
         <h1>{createSpans('Deposit Money.')}</h1>
         {!showOtpInput ? (
           <div id='wrapper'>
-            <motion.a
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, ease: 'backOut' }}
-              id='otp-sent'
-              className='faic s-gap'
-            >
-              Sending OTP on <i>{formData.email}</i>
-              <span className='relative'><i className="center2 ri-check-double-fill"></i></span>
-            </motion.a>
             <motion.form
               id='form'
               initial={{ opacity: 0, y: 50 }}
@@ -177,9 +174,17 @@ const Deposit = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, ease: 'backOut', delay: 0.6 }}
               >
-                <button type='submit'>Request OTP</button>
+                <button type='submit' disabled={isOtpLoading}>
+                  {isOtpLoading ? 'Sending OTP...' : 'Request OTP'}
+                </button>
               </motion.div>
             </motion.form>
+            {isOtpLoading && (
+              <div className='loading-overlay'>
+                <div className='loading-spinner'></div>
+                <p>Sending OTP...</p>
+              </div>
+            )}
           </div>
         ) : (
           <>
@@ -209,15 +214,16 @@ const Deposit = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease: 'backOut', delay: 0.4 }}
               >
-                <button type='submit'>Submit OTP and Deposit</button>
+                <button type='submit' disabled={isLoading}>
+                  {isLoading ? 'Verifying OTP...' : 'Verify OTP'}
+                </button>
               </motion.div>
             </motion.form>
+            <div className="container">
+              <span id="money-deposited">Money Deposited Successfully</span>
+            </div>
           </>
         )}
-        <div id='money-deposited'>
-          Money Deposited
-          <span className='relative'><i className="center2 ri-check-double-fill"></i></span>
-        </div>
       </section>
     </div>
   );

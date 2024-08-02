@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye and eye-slash icons
-// import './Login.css'; 
 import '../Home/Home.css'
 
 const Login = () => {

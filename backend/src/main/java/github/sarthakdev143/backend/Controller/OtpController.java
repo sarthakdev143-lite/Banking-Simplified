@@ -17,7 +17,6 @@ import github.sarthakdev143.backend.Repository.UsersRepository;
 import github.sarthakdev143.backend.Service.EmailService;
 import github.sarthakdev143.backend.Service.OtpService;
 
-@SuppressWarnings("unused")
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class OtpController {

@@ -34,9 +34,7 @@ const Deposit = () => {
     setIsOtpLoading(true);
 
     try {
-      await MYAXIOS.get('/check-user', {
-        params: { email: formData.email }
-      });
+      await MYAXIOS.get('/check-user', { params: { email: formData.email } });
 
       let isCorrect = await MYAXIOS.get('/check-password', {
         params: { email: formData.email, password: formData.password }

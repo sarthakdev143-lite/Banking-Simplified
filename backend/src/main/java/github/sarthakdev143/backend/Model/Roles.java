@@ -11,18 +11,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Document
-public class Users {
+public class Roles {
     @Id
     private String id;
-    private String account_holder_name;
-    private String email;
-    private String password;
-    private String account_balance;
-    private Set<Roles> roles;
+    private String name;
+    private Set<Users> users;
 }

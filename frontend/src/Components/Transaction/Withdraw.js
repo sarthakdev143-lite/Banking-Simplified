@@ -87,7 +87,7 @@ const Withdraw = () => {
         });
 
         if (depositResponse.data.success) {
-          alert("₹" + formData.amount + " has Been Withdrawn To Your Bank Account")
+          alert("₹" + formData.amount + " has Been Withdrawn From Your Bank Account")
           alert('Redirecting to Home Page...');
           window.location.href = '/';
         } else {

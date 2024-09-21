@@ -124,7 +124,7 @@ const Deposit = () => {
     <div>
       <img
         src='https://images.unsplash.com/photo-1577915207354-8f266a3fc016?auto=format&fit=crop&w=1470&q=80'
-        alt='Background Image Not Found'
+        alt='Background Not Found'
       />
       <section className='content fdc faic'>
         <h1>{createSpans('Deposit Money.')}</h1>

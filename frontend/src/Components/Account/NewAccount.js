@@ -14,7 +14,7 @@ const NewAccount = () => {
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
 
   const handleInputChange = (e) => {
@@ -104,7 +104,7 @@ const NewAccount = () => {
     <div>
       <img
         src='https://images.unsplash.com/photo-1577915207354-8f266a3fc016?auto=format&fit=crop&w=1470&q=80'
-        alt='Background'
+        alt='Background Not Found'
       />
       <section className='content'>
         <h1>{createSpans('Create New Account.')}</h1>

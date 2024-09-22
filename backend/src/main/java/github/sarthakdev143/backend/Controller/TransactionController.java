@@ -11,7 +11,7 @@ import github.sarthakdev143.backend.DTO.TransactionDTO;
 import github.sarthakdev143.backend.Service.TransactionService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
 public class TransactionController {
 
     @Autowired

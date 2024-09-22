@@ -20,7 +20,7 @@ import github.sarthakdev143.backend.Repository.UsersRepository;
 import github.sarthakdev143.backend.Service.UsersService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
 public class UsersController {
 
     @Autowired

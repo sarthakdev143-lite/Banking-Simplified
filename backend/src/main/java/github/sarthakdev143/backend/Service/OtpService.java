@@ -37,10 +37,13 @@ public class OtpService {
         OtpDetails otpDetails = otpStore.get(email);
         System.out.println("\nActual OTP : " + otpDetails.getOtp() + "\nEntered OTP : " + enteredOtp + "\n\n");
         if (otpDetails != null && otpDetails.getOtp().equals(enteredOtp)) {
+            System.out.println("OTP Validation Successful..");            
             if (System.currentTimeMillis() <= otpDetails.getExpirationTime()) {
+                System.out.println("OTP Validation Successful.. OTP is not expired..");            
                 otpStore.remove(email); // OTP is valid, remove it from the store
                 return true;
             } else {
+                System.out.println("OTP Validation Successful.. OTP is expired..");
                 otpStore.remove(email); // OTP has expired, remove it from the store
             }
         }

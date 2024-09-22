@@ -18,7 +18,7 @@ import github.sarthakdev143.backend.Service.EmailService;
 import github.sarthakdev143.backend.Service.OtpService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
 public class OtpController {
 
     @Autowired

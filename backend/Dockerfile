@@ -11,7 +11,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Use an official Java runtime image to run the app
-FROM openjdk:17-jre-slim
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the jar file from the build stage

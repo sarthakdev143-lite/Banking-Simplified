@@ -1,24 +1,14 @@
-# Use an official Maven image to build the app
-FROM maven:3.8.6-openjdk-17 AS build
-WORKDIR /app
-
-# Copy the pom.xml file and download project dependencies
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copy the source code and package the application
-COPY src ./src
-RUN mvn clean package -DskipTests
-
-# Use an official Java runtime image to run the app
+# Use the official Java image
 FROM openjdk:17-jdk-slim
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the jar file from the build stage
-COPY --from=build /app/target/*.jar app.jar
+# Copy the jar file into the container
+COPY target/backend.jar app.jar
 
-# Expose port 8080 (or whatever your app uses)
+# Expose the port your app runs on
 EXPOSE 8080
 
-# Run the application
+# Command to run the jar
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -24,9 +24,9 @@ header {
 
 ul {
     background: #ffffff3a;
-    padding: 0 3rem;
+    padding: 0 3rem !important;
     border-radius: 5rem;
-    margin-top: 1rem;
+    margin-top: 1rem !important;
     font-size: 1.1rem;
     backdrop-filter: blur(0.2rem);
 

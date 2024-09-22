@@ -1,5 +1,5 @@
 # Use an official Maven image to build the app
-FROM maven:3.8.1-jdk-17 AS build
+FROM maven:3.8.6-openjdk-17 AS build
 WORKDIR /app
 
 # Copy the pom.xml file and download project dependencies

@@ -34,16 +34,16 @@ const Withdraw = () => {
     setIsOtpLoading(true);
 
     try {
-      await MYAXIOS.get('/check-user', {
+      await MYAXIOS.get('/api/check-user', {
         params: { email: formData.email }
       });
 
-      let isCorrect = await MYAXIOS.get('/check-password', {
+      let isCorrect = await MYAXIOS.get('/api/check-password', {
         params: { email: formData.email, password: formData.password }
       });
 
       if (isCorrect.data === true) {
-        await MYAXIOS.post('/send-transaction-otp', { email: formData.email });
+        await MYAXIOS.post('/api/send-transaction-otp', { email: formData.email });
         setShowOtpInput(true);
         console.log("OTP Sent");
       } else {
@@ -72,7 +72,7 @@ const Withdraw = () => {
 
       console.log("\nEmail : " + email + "\nOTP : " + otp);
       console.log("Verifying OTP...");
-      const response = await MYAXIOS.post('/verify-trasaction-otp', {
+      const response = await MYAXIOS.post('/api/verify-trasaction-otp', {
         email: email,
         otp: otp
       });
@@ -81,7 +81,7 @@ const Withdraw = () => {
       alert('OTP verification successful, Initiating Withdraw');
 
       if (response.data.success) {
-        const depositResponse = await MYAXIOS.post('/withdraw', {
+        const depositResponse = await MYAXIOS.post('/api/withdraw', {
           email: email,
           amount: formData.amount
         });

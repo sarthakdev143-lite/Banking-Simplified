@@ -18,8 +18,9 @@ import github.sarthakdev143.backend.Model.Users;
 import github.sarthakdev143.backend.Service.UsersService;
 
 @RestController
-@RequestMapping("/admin-panel")
-@CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
+@RequestMapping("/api/admin-panel")
+// @CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
+@CrossOrigin(origins = "http://localhost:3000/")
 public class AdminController {
 
     @Autowired

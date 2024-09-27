@@ -10,4 +10,5 @@ import github.sarthakdev143.backend.Model.Users;
 @Repository
 public interface UsersRepository extends MongoRepository<Users, String> {
     Optional<Users> findByEmail(String email);
+
 }

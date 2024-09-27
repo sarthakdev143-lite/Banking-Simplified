@@ -25,7 +25,7 @@ const NewAccount = () => {
     e.preventDefault();
     try {
       console.log("Verifying OTP..");
-      const response = await MYAXIOS.post('/verify-otp', {
+      const response = await MYAXIOS.post('/api/verify-otp', {
         user: formData,
         otp: otp
       });
@@ -57,7 +57,7 @@ const NewAccount = () => {
     e.preventDefault();
     setIsOtpLoading(true);
     try {
-      const response = await MYAXIOS.post('/create', { email: formData.email });
+      const response = await MYAXIOS.post('/api/create', { email: formData.email });
       if (response.status === 200) {
         setShowOtpInput(true);
       }

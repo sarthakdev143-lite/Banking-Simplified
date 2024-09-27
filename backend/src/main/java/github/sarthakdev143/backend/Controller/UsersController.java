@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,9 @@ import github.sarthakdev143.backend.Repository.UsersRepository;
 import github.sarthakdev143.backend.Service.UsersService;
 
 @RestController
-@CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
+// @CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
+@CrossOrigin(origins = "http://localhost:3000/")
+@RequestMapping("/api")
 public class UsersController {
 
     @Autowired
@@ -97,7 +100,8 @@ public class UsersController {
         Optional<Users> user = usersRepository.findByEmail(email);
         if (user.isPresent()) {
             String userPassword = user.get().getPassword();
-            System.out.println("\n\nCurrent User Password : " + userPassword + "\nEntered Password : " + password + "\n\n");
+            System.out.println(
+                    "\n\nCurrent User Password : " + userPassword + "\nEntered Password : " + password + "\n\n");
             if (password.equals(userPassword)) {
                 System.out.println("\nPassword Matched!\n\n");
                 return new ResponseEntity<>(true, HttpStatus.OK);

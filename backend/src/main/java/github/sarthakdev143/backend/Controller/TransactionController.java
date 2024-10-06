@@ -11,8 +11,8 @@ import github.sarthakdev143.backend.DTO.TransactionDTO;
 import github.sarthakdev143.backend.Service.TransactionService;
 
 @RestController
-// @CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
-@CrossOrigin(origins = "http://localhost:3000/")
+@CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
+// @CrossOrigin(origins = "http://localhost:3000/")
 @RequestMapping("/api")
 public class TransactionController {
 

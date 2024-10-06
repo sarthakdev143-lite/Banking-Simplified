@@ -124,6 +124,10 @@ public class UsersController {
 @CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
 class LiveController {
 
+    @GetMapping("/")
+    public String redirectLive() {
+        return "redirect:/live";
+    }
     @GetMapping("/live")
     public ResponseEntity<String> checkIfServerIsLive() {
         return new ResponseEntity<>("Server is Live!", HttpStatus.OK);

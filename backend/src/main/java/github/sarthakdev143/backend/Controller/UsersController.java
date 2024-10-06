@@ -119,3 +119,13 @@ public class UsersController {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 }
+
+@RestController
+@CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
+class LiveController {
+
+    @GetMapping("/live")
+    public ResponseEntity<String> checkIfServerIsLive() {
+        return new ResponseEntity<>("Server is Live!", HttpStatus.OK);
+    }
+}

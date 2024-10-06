@@ -122,12 +122,7 @@ public class UsersController {
 
 @RestController
 class LiveController {
-
     @GetMapping("/")
-    public String redirectLive() {
-        return "redirect:/live";
-    }
-    @GetMapping("/live")
     public ResponseEntity<String> checkIfServerIsLive() {
         return new ResponseEntity<>("Server is Live!", HttpStatus.OK);
     }

@@ -121,7 +121,6 @@ public class UsersController {
 }
 
 @RestController
-@CrossOrigin(origins = "https://sarthakdev-banking.netlify.app/")
 class LiveController {
 
     @GetMapping("/")

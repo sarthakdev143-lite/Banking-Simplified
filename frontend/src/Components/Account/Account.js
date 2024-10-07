@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const Account = () => {
   
-  useLayoutEffect(() => {
+  useEffect(() => {
     alert("This Part is in Under Construction.")
     window.location.href = '/';
   }, [])
